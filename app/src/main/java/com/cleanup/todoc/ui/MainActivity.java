@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      *
      * @param task the task to be added to the list
      */
-    private void addTask(@NonNull Task task) {
+    public void addTask(@NonNull Task task) {
         tasks.add(task);
         updateTasks();
     }

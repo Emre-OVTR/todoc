@@ -8,9 +8,13 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.style.TtsSpan;
 
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+
+import java.util.Calendar;
+import java.util.Date;
 
 @Database(entities = {Project.class, Task.class}, version = 1, exportSchema = false)
 public abstract class CleanUpDatabase extends RoomDatabase {
@@ -48,10 +52,10 @@ public abstract class CleanUpDatabase extends RoomDatabase {
                 contentValues.put("id", 1);
                 contentValues.put("projectId", 1);
                 contentValues.put("name", "Test");
-                contentValues.put("creationTimestamp", 43);
+                contentValues.put("creationTimestamp", new Date().getTime());
 
 
-                db.insert("User", OnConflictStrategy.IGNORE, contentValues);
+                db.insert("Project", OnConflictStrategy.IGNORE, contentValues);
             }
         };
     }
