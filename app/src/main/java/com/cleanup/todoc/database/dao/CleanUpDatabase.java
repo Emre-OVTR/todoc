@@ -50,12 +50,12 @@ public abstract class CleanUpDatabase extends RoomDatabase {
 
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("id", 1);
-                contentValues.put("projectId", 1);
+                contentValues.put("projectId", 1L);
                 contentValues.put("name", "Test");
                 contentValues.put("creationTimestamp", new Date().getTime());
 
 
-                db.insert("Project", OnConflictStrategy.IGNORE, contentValues);
+                db.insert("Task", OnConflictStrategy.IGNORE, contentValues);
             }
         };
     }
