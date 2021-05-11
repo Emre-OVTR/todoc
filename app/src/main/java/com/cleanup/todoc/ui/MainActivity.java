@@ -1,5 +1,6 @@
 package com.cleanup.todoc.ui;
 
+import android.arch.persistence.room.Entity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +32,8 @@ import java.util.Date;
  *
  * @author Gaëtan HERFRAY
  */
+
+
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
     /**
      * List of all projects available in the application

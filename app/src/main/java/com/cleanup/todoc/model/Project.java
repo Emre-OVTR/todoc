@@ -12,14 +12,14 @@ import android.support.annotation.Nullable;
  *
  * @author Gaëtan HERFRAY
  */
-@Entity(foreignKeys = @ForeignKey(entity = Task.class,
-        parentColumns = "id",
-        childColumns = "id"))
+//@Entity(foreignKeys = @ForeignKey(entity = Task.class,
+  //      parentColumns = "id",
+    //    childColumns = "id"))
 public class Project {
     /**
      * The unique identifier of the project
      */
-    @PrimaryKey
+    //@PrimaryKey
     private final long id;
 
     /**

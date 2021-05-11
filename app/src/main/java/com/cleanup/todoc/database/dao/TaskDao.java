@@ -15,14 +15,13 @@ import java.util.List;
 @Dao
 public interface TaskDao {
 
-    @Query("SELECT * FROM Task WHERE id= :taskId")
-    LiveData<Task> getTask(long taskId);
+    @Query("SELECT * FROM task WHERE id = :taskId")
+    LiveData<List<Task>> getTasks (long taskId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addTask(Task task);
 
-    @Update
-    void updateTask(List<Task> tasks);
+
 
     @Query("DELETE FROM Task WHERE id = :taskId")
     void deleteTask(long taskId);

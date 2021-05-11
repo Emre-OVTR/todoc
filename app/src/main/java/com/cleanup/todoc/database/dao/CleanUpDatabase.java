@@ -12,11 +12,13 @@ import android.text.style.TtsSpan;
 
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.ui.MainActivity;
+import com.cleanup.todoc.ui.TasksAdapter;
 
 import java.util.Calendar;
 import java.util.Date;
 
-@Database(entities = {Project.class, Task.class}, version = 1, exportSchema = false)
+@Database(entities = {Task.class}, version = 1, exportSchema = false)
 public abstract class CleanUpDatabase extends RoomDatabase {
 
     public static volatile CleanUpDatabase INSTANCE;

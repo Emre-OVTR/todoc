@@ -1,5 +1,6 @@
 package com.cleanup.todoc.ui;
 
+import android.arch.persistence.room.Entity;
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
@@ -20,6 +21,7 @@ import java.util.List;
  *
  * @author Gaëtan HERFRAY
  */
+
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
     /**
      * The list of tasks the adapter deals with
