@@ -1,6 +1,5 @@
 package com.cleanup.todoc.ui;
 
-import android.arch.persistence.room.Entity;
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
