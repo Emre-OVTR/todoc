@@ -12,27 +12,27 @@ import android.support.annotation.Nullable;
  *
  * @author Gaëtan HERFRAY
  */
-//@Entity(foreignKeys = @ForeignKey(entity = Task.class,
-  //      parentColumns = "id",
-    //    childColumns = "id"))
+
+@Entity(tableName = "Projects")
+
 public class Project {
     /**
      * The unique identifier of the project
      */
-    //@PrimaryKey
-    private final long id;
+    @PrimaryKey
+    private long id;
 
     /**
      * The name of the project
      */
     @NonNull
-    private final String name;
+    private  String name;
 
     /**
      * The hex (ARGB) code of the color associated to the project
      */
     @ColorInt
-    private final int color;
+    private  int color;
 
     /**
      * Instantiates a new Project.
@@ -86,6 +86,10 @@ public class Project {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     /**
      * Returns the name of the project.
      *
@@ -96,6 +100,10 @@ public class Project {
         return name;
     }
 
+    public void setName(@NonNull String name) {
+        this.name = name;
+    }
+
     /**
      * Returns the hex (ARGB) code of the color associated to the project.
      *
@@ -104,6 +112,10 @@ public class Project {
     @ColorInt
     public int getColor() {
         return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     @Override

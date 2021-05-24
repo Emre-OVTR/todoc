@@ -17,22 +17,27 @@ import com.cleanup.todoc.ui.TasksAdapter;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-@Database(entities = {Task.class}, version = 1, exportSchema = false)
+@Database(entities = {Project.class, Task.class}, version = 1, exportSchema = false)
 public abstract class CleanUpDatabase extends RoomDatabase {
+
+
 
     public static volatile CleanUpDatabase INSTANCE;
 
     public abstract TaskDao taskDao();
+    public abstract ProjectDao projectDao();
 
-    public static CleanUpDatabase getInstance(Context context) {
+    public static CleanUpDatabase getInstance(final Context context) {
 
         if (INSTANCE == null){
 
             synchronized (CleanUpDatabase.class) {
                 if (INSTANCE== null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                                    CleanUpDatabase.class, "MyDatebase.db")
+                                                    CleanUpDatabase.class, "cleanup_database.db")
                                                     .addCallback(prepopulateDatabase())
                                                     .build();
                 }
@@ -50,16 +55,17 @@ public abstract class CleanUpDatabase extends RoomDatabase {
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
 
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("id", 1);
-                contentValues.put("projectId", 1L);
-                contentValues.put("name", "Test");
-                contentValues.put("creationTimestamp", new Date().getTime());
+                Project[] projects = Project.getAllProjects();
+                for (Project project : projects) {
+                    ContentValues contentValues = new ContentValues();  //  Populate
+                    contentValues.put("name", project.getName());
+                    contentValues.put("color", project.getColor());
 
-
-                db.insert("Task", OnConflictStrategy.IGNORE, contentValues);
+                    db.insert("projects", OnConflictStrategy.IGNORE, contentValues);
+                }
             }
         };
+
     }
 
 }
