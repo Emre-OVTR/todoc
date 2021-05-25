@@ -1,13 +1,11 @@
 package com.cleanup.todoc.ui;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-//import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +30,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+
+
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
  * <p>Displays the list of tasks.</p>
@@ -43,8 +43,8 @@ import java.util.List;
 public class
 MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
 
-    private final Project[] allProjects = Project.getAllProjects();
 
+    private List<Project> allProjects;
 
     @NonNull
     private final ArrayList<Task> tasks = new ArrayList<>();
@@ -91,7 +91,8 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
         this.configureViewModel();
 
         configureViewModel();
-        getCurrentTasks();
+        getProjects();
+        getTasks();
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
@@ -99,12 +100,7 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
-        findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddTaskDialog();
-            }
-        });
+        findViewById(R.id.fab_add_task).setOnClickListener(view -> showAddTaskDialog());
 
     }
 
@@ -130,7 +126,7 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
             sortMethod = SortMethod.RECENT_FIRST;
         }
 
-        getCurrentTasks();
+        getTasks();
 
         return super.onOptionsItemSelected(item);
     }
@@ -138,7 +134,7 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
     @Override
     public void onDeleteTask(Task task) {
         taskViewModel.deleteTask(task);
-        //updateTasks(tasks);
+        adapter.updateTasks(tasks);
     }
 
     /**
@@ -217,9 +213,17 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
      * Updates the list of tasks in the UI
      */
 
-    private void getCurrentTasks(){
-        this.taskViewModel.getAllTasks().observe(this, this::updateTasks);
+    private void getProjects(){
+        assert taskViewModel.getProjects() != null;
+        taskViewModel.getProjects().observe(this, this::updateProjects);
     }
+
+    private void getTasks(){
+        taskViewModel.getTasks().observe(this, this::updateTasks);
+    }
+
+    private void updateProjects(List<Project> projects) { allProjects = projects; }
+
     private void updateTasks(List<Task> tasks) {
         if (tasks.size() == 0) {
             lblNoTasks.setVisibility(View.VISIBLE);
@@ -258,32 +262,19 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
         alertBuilder.setTitle(R.string.add_task);
         alertBuilder.setView(R.layout.dialog_add_task);
         alertBuilder.setPositiveButton(R.string.add, null);
-        alertBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                dialogEditText = null;
-                dialogSpinner = null;
-                dialog = null;
-            }
+        alertBuilder.setOnDismissListener(dialogInterface -> {
+            dialogEditText = null;
+            dialogSpinner = null;
+            dialog = null;
         });
 
         dialog = alertBuilder.create();
 
         // This instead of listener to positive button in order to avoid automatic dismiss
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        dialog.setOnShowListener(dialogInterface -> {
 
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-
-                Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        onPositiveButtonClick(dialog);
-                    }
-                });
-            }
+            Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(view -> onPositiveButtonClick(dialog));
         });
 
         return dialog;

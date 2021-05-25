@@ -40,16 +40,15 @@ public class TaskDaoTest {
 
         mCleanUpDatabase = Room.inMemoryDatabaseBuilder(context, CleanUpDatabase.class).allowMainThreadQueries().build();
 
+        mTaskDao = mCleanUpDatabase.taskDao();
+
+        mProjectDao = mCleanUpDatabase.projectDao();
     }
 
 
 
     @After
     public void closeDb() {
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
-
-        mCleanUpDatabase = Room.inMemoryDatabaseBuilder(context, CleanUpDatabase.class).allowMainThreadQueries().build();
-
         mCleanUpDatabase.close();
     }
 
@@ -57,9 +56,9 @@ public class TaskDaoTest {
     @Test
     public void addAndGetTask() throws InterruptedException {
 
-        mTaskDao = mCleanUpDatabase.taskDao();
 
-        mProjectDao = mCleanUpDatabase.projectDao();
+
+
 
         Project example = new Project(1,"example", Color.RED);
 

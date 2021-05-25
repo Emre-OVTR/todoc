@@ -2,37 +2,45 @@ package com.cleanup.todoc.tasklist;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
 
+import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.repositories.ProjectDataRepository;
 import com.cleanup.todoc.repositories.TaskDataRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 public class TaskViewModel extends ViewModel {
 
     private final TaskDataRepository taskDataSource;
+    private final ProjectDataRepository projectDataSource;
     private final Executor executor;
 
-    private LiveData<List<Task>> currentTasks;
 
-    public TaskViewModel(TaskDataRepository taskDataSource, Executor executor) {
+    @Nullable
+    private LiveData<List<Project>> mProjects;
+
+    public TaskViewModel(TaskDataRepository taskDataSource, ProjectDataRepository projectDataSource, Executor executor) {
         this.taskDataSource = taskDataSource;
+        this.projectDataSource = projectDataSource;
         this.executor = executor;
     }
 
     public void init(){
-        if (this.currentTasks!= null){
-            return;
-        }
-        currentTasks = taskDataSource.getAllTasks();
+       mProjects = projectDataSource.getAllProjects();
 
 
     }
 
-    public LiveData<List<Task>> getAllTasks(){
-        return this.currentTasks;
+    @Nullable
+    public LiveData<List<Project>> getProjects(){
+        return mProjects;
+    }
+
+    public LiveData<List<Task>> getTasks(){
+        return taskDataSource.getAllTasks();
     }
 
     public void addTask(Task task) {
