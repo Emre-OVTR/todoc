@@ -1,10 +1,11 @@
 package com.cleanup.todoc;
 
-import android.arch.persistence.room.Room;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.cleanup.todoc.database.dao.TodocDatabase;
 import com.cleanup.todoc.model.Project;
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,6 +26,10 @@ public class ProjectDaoTest {
 
     private TodocDatabase mTodocDatabase;
     private static Project NEW_PROJECT = new Project(1, "Projet Rouge", Color.RED);
+
+
+    @Rule
+    public InstantTaskExecutorRule mInstantTaskExecutorRule = new InstantTaskExecutorRule();
 
     @Before
     public void initDb(){

@@ -1,11 +1,11 @@
 package com.cleanup.todoc;
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.arch.persistence.room.Room;
-import android.content.Context;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
+
 import android.graphics.Color;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.cleanup.todoc.database.dao.TodocDatabase;
 import com.cleanup.todoc.database.dao.ProjectDao;
@@ -42,9 +42,13 @@ public class TaskDaoTest {
 
     @Before
     public void initDb(){
+
         this.mDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().getContext(), TodocDatabase.class)
                 .allowMainThreadQueries()
                 .build();
+
+        mProjectDao = mDatabase.projectDao();
+        mTaskDao = mDatabase.taskDao();
     }
 
     @After
@@ -55,9 +59,9 @@ public class TaskDaoTest {
     @Test
     public void addAndGetTasks() throws Exception{
 
-        this.mDatabase.projectDao().createProject(NEW_PROJECT);
+        mProjectDao.createProject(NEW_PROJECT);
 
-        this.mDatabase.taskDao().addTask(NEW_TASK);
+        mTaskDao.addTask(NEW_TASK);
 
         List<Task> tasks = LiveDataTestUtils.getValue(this.mDatabase.taskDao().getAllTasks());
 
