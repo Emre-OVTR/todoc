@@ -1,20 +1,21 @@
 package com.cleanup.todoc;
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.cleanup.todoc.database.dao.CleanUpDatabase;
+import com.cleanup.todoc.database.dao.TodocDatabase;
 import com.cleanup.todoc.database.dao.ProjectDao;
 import com.cleanup.todoc.database.dao.TaskDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
-
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,83 +23,55 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class TaskDaoTest {
 
-    public CleanUpDatabase mCleanUpDatabase;
+    private TodocDatabase mDatabase;
     private TaskDao mTaskDao;
-    public ProjectDao mProjectDao;
+    private ProjectDao mProjectDao;
 
+    Project NEW_PROJECT = new Project(1, "projettest", Color.RED);
+    Task NEW_TASK = new Task(1, "test", 0);
+
+
+
+    @Rule
+    public InstantTaskExecutorRule mInstantTaskExecutorRule = new InstantTaskExecutorRule();
 
 
     @Before
-    public void initDb() {
-
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
-
-        mCleanUpDatabase = Room.inMemoryDatabaseBuilder(context, CleanUpDatabase.class).allowMainThreadQueries().build();
-
-        mTaskDao = mCleanUpDatabase.taskDao();
-
-        mProjectDao = mCleanUpDatabase.projectDao();
+    public void initDb(){
+        this.mDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().getContext(), TodocDatabase.class)
+                .allowMainThreadQueries()
+                .build();
     }
-
-
 
     @After
-    public void closeDb() {
-        mCleanUpDatabase.close();
-    }
-
-
-    @Test
-    public void addAndGetTask() throws InterruptedException {
-
-
-
-
-
-        Project example = new Project(1,"example", Color.RED);
-
-        mProjectDao.createProject(example);
-
-        Task task = new Task(1, "Task 0", 0);
-
-        mTaskDao.addTask(task);
-
-        List<Task> tasks = LiveDataTestUtils.getValue(mTaskDao.getAllTasks());
-
-        assertEquals(1, tasks.size());
-
-        assertEquals(task.getName(), tasks.get(0).getName());
+    public void closeDb(){
+        mDatabase.close();
     }
 
     @Test
+    public void addAndGetTasks() throws Exception{
 
-    public void deleteTask() throws InterruptedException {
+        this.mDatabase.projectDao().createProject(NEW_PROJECT);
 
+        this.mDatabase.taskDao().addTask(NEW_TASK);
 
-        mTaskDao = mCleanUpDatabase.taskDao();
+        List<Task> tasks = LiveDataTestUtils.getValue(this.mDatabase.taskDao().getAllTasks());
 
-        mProjectDao = mCleanUpDatabase.projectDao();
+        assertEquals(tasks.get(0).getName(), NEW_TASK.getName());
+    }
 
-        Project example = new Project(1,"example", Color.RED);
+    @Test
+    public void deleteAndGetTasks() throws Exception{
 
-        mProjectDao.createProject(example);
-
-        Task task = new Task(1, "Task 0", 0);
-
-        mTaskDao.addTask(task);
-
-        List<Task> tasks = LiveDataTestUtils.getValue(mTaskDao.getAllTasks());
-
-        mTaskDao.deleteTask(task);
-
-        assertFalse(tasks.contains(task));
-
-
+        this.mDatabase.projectDao().createProject(NEW_PROJECT);
+        this.mDatabase.taskDao().addTask(NEW_TASK);
+        this.mDatabase.taskDao().deleteTask(NEW_TASK);
+        List<Task> tasks = LiveDataTestUtils.getValue(this.mDatabase.taskDao().getAllTasks());
+        assertFalse(tasks.contains(NEW_TASK));
     }
 
 

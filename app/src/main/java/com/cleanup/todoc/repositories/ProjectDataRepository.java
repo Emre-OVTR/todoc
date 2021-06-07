@@ -11,12 +11,11 @@ public class ProjectDataRepository {
 
     private final ProjectDao mProjectDao;
 
-
     public ProjectDataRepository(ProjectDao projectDao) {
         mProjectDao = projectDao;
     }
 
-   public LiveData<List<Project>> getAllProjects(){
+    public LiveData<List<Project>> getAllProjects(){
         return mProjectDao.getAllProjects();
     }
 }

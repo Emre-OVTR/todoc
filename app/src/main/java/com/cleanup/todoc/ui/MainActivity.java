@@ -23,7 +23,7 @@ import com.cleanup.todoc.injections.Injection;
 import com.cleanup.todoc.injections.ViewModelFactory;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
-import com.cleanup.todoc.tasklist.TaskViewModel;
+import com.cleanup.todoc.tasklist.MainActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,61 +38,70 @@ import java.util.List;
  *
  * @author Gaëtan HERFRAY
  */
-
-
-public class
-MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
-
-
+public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+    /**
+     * List of all projects available in the application
+     */
     private List<Project> allProjects;
 
+    /**
+     * List of all current tasks of the application
+     */
     @NonNull
     private final ArrayList<Task> tasks = new ArrayList<>();
 
+    /**
+     * The adapter which handles the list of tasks
+     */
     private final TasksAdapter adapter = new TasksAdapter(tasks, this);
 
+    /**
+     * The sort method to be used to display tasks
+     */
     @NonNull
     private SortMethod sortMethod = SortMethod.NONE;
 
+    /**
+     * Dialog to create a new task
+     */
     @Nullable
     public AlertDialog dialog = null;
 
+    /**
+     * EditText that allows user to set the name of a task
+     */
     @Nullable
     private EditText dialogEditText = null;
 
+    /**
+     * Spinner that allows the user to associate a project to a task
+     */
     @Nullable
     private Spinner dialogSpinner = null;
 
-    // Suppress warning is safe because variable is initialized in onCreate
+    /**
+     * The RecyclerView which displays the list of tasks
+     */
+
     @SuppressWarnings("NullableProblems")
     @NonNull
     private RecyclerView listTasks;
 
-    // Suppress warning is safe because variable is initialized in onCreate
+    /**
+     * The TextView displaying the empty state
+     */
+
     @SuppressWarnings("NullableProblems")
     @NonNull
     private TextView lblNoTasks;
 
-    private TaskViewModel taskViewModel;
-
-
+    private MainActivityViewModel mMainActivityViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            sortMethod = SortMethod.values()[
-                    savedInstanceState.getInt("sortMethod", 4)];
-        }
-
         setContentView(R.layout.activity_main);
-
-        this.configureViewModel();
-
-        configureViewModel();
-        getProjects();
-        getTasks();
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
@@ -102,6 +111,27 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
 
         findViewById(R.id.fab_add_task).setOnClickListener(view -> showAddTaskDialog());
 
+        this.configureViewModel();
+        getProjects();
+        getTasks();
+    }
+
+    private void configureViewModel(){
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        mMainActivityViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
+        // mMainActivityViewModel = ViewModelProvider.get(MainActivityViewModel.class);
+        mMainActivityViewModel.init();
+    }
+
+    private void getProjects(){
+        mMainActivityViewModel.getProjects().observe(this, this::updateProjects);
+    }
+    private void getTasks(){
+        mMainActivityViewModel.getTasks().observe(this, this::updateTasks);
+    }
+
+    private void updateProjects(List<Project> projects){
+        allProjects = projects;
     }
 
     @Override
@@ -109,8 +139,6 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
         getMenuInflater().inflate(R.menu.actions, menu);
         return true;
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -133,7 +161,7 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
 
     @Override
     public void onDeleteTask(Task task) {
-        taskViewModel.deleteTask(task);
+        mMainActivityViewModel.deleteTask(task);
         adapter.updateTasks(tasks);
     }
 
@@ -143,26 +171,23 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
      * @param dialogInterface the current displayed dialog
      */
     private void onPositiveButtonClick(DialogInterface dialogInterface) {
-        // If dialog is open
+
         if (dialogEditText != null && dialogSpinner != null) {
-            // Get the name of the task
+
             String taskName = dialogEditText.getText().toString();
 
-            // Get the selected project to be associated to the task
+
             Project taskProject = null;
             if (dialogSpinner.getSelectedItem() instanceof Project) {
                 taskProject = (Project) dialogSpinner.getSelectedItem();
             }
 
-            // If a name has not been set
+
             if (taskName.trim().isEmpty()) {
                 dialogEditText.setError(getString(R.string.empty_task_name));
             }
-            // If both project and name of the task have been set
-            else if (taskProject != null) {
-                // TODO: Replace this by id of persisted task
-               // long id = (long) (Math.random() * 50000);
 
+            else if (taskProject != null) {
 
                 Task task = new Task(
                         taskProject.getId(),
@@ -174,12 +199,12 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
 
                 dialogInterface.dismiss();
             }
-            // If name has been set, but project has not been set (this should never occur)
+
             else{
                 dialogInterface.dismiss();
             }
         }
-        // If dialog is already closed
+
         else {
             dialogInterface.dismiss();
         }
@@ -204,31 +229,19 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
      *
      * @param task the task to be added to the list
      */
-    public void addTask(@NonNull Task task) {
-        taskViewModel.addTask(task);
+    private void addTask(@NonNull Task task) {
+        mMainActivityViewModel.addTask(task);
         adapter.updateTasks(tasks);
     }
 
     /**
      * Updates the list of tasks in the UI
      */
-
-    private void getProjects(){
-        assert taskViewModel.getProjects() != null;
-        taskViewModel.getProjects().observe(this, this::updateProjects);
-    }
-
-    private void getTasks(){
-        taskViewModel.getTasks().observe(this, this::updateTasks);
-    }
-
-    private void updateProjects(List<Project> projects) { allProjects = projects; }
-
     private void updateTasks(List<Task> tasks) {
         if (tasks.size() == 0) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
-        }else {
+        } else {
             lblNoTasks.setVisibility(View.GONE);
             listTasks.setVisibility(View.VISIBLE);
             switch (sortMethod) {
@@ -270,11 +283,17 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
 
         dialog = alertBuilder.create();
 
-        // This instead of listener to positive button in order to avoid automatic dismiss
+
         dialog.setOnShowListener(dialogInterface -> {
 
             Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setOnClickListener(view -> onPositiveButtonClick(dialog));
+            button.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    onPositiveButtonClick(dialog);
+                }
+            });
         });
 
         return dialog;
@@ -316,16 +335,4 @@ MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListene
          */
         NONE
     }
-
-    private void configureViewModel(){
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.taskViewModel = ViewModelProviders.of(this, viewModelFactory).get(TaskViewModel.class);
-        this.taskViewModel.init();
-    }
-
-
-
-
-
-
 }

@@ -16,8 +16,6 @@ public class TaskDataRepository {
         this.taskdao = taskdao;
     }
 
-
-
     public LiveData<List<Task>> getAllTasks(){
         return taskdao.getAllTasks();
     }

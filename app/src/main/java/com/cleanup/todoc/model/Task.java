@@ -15,10 +15,8 @@ import java.util.Comparator;
  * @author Gaëtan HERFRAY
  */
 
-    @Entity(tableName = "Task", foreignKeys = @ForeignKey (entity = Project.class,
-    parentColumns = "id",
-    childColumns = "project_id"))
-
+@Entity (tableName = "Task", foreignKeys = @ForeignKey(entity = Project.class,
+        parentColumns = "id", childColumns = "project_id"))
     public class Task {
     /**
      * The unique identifier of the task
@@ -48,7 +46,6 @@ import java.util.Comparator;
 
 
     public Task(long projectId, @NonNull String name, long creationTimestamp) {
-
         this.setProjectId(projectId);
         this.setName(name);
         this.setCreationTimestamp(creationTimestamp);
@@ -61,7 +58,6 @@ import java.util.Comparator;
      */
     public long getId() {
         return id;
-
     }
 
     /**

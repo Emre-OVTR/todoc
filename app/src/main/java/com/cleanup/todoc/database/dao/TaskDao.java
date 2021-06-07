@@ -9,14 +9,10 @@ import android.arch.persistence.room.Query;
 
 import com.cleanup.todoc.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
 public interface TaskDao {
-
-
-
 
     @Query("SELECT * FROM task")
     LiveData<List<Task>> getAllTasks();
@@ -26,7 +22,5 @@ public interface TaskDao {
 
     @Delete
     void deleteTask(Task task);
-
-
 
 }

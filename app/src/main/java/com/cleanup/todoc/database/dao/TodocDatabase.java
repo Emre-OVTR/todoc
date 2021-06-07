@@ -8,36 +8,28 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.style.TtsSpan;
 
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
-import com.cleanup.todoc.ui.MainActivity;
-import com.cleanup.todoc.ui.TasksAdapter;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Database(entities = {Project.class, Task.class}, version = 1, exportSchema = false)
-public abstract class CleanUpDatabase extends RoomDatabase {
+public abstract class TodocDatabase extends RoomDatabase {
 
-
-
-    public static volatile CleanUpDatabase INSTANCE;
-
+    public static volatile TodocDatabase INSTANCE;
     public abstract TaskDao taskDao();
     public abstract ProjectDao projectDao();
 
-    public static CleanUpDatabase getInstance(final Context context) {
+
+
+    public static TodocDatabase getInstance(final Context context) {
 
         if (INSTANCE == null){
 
-            synchronized (CleanUpDatabase.class) {
+            synchronized (TodocDatabase.class) {
                 if (INSTANCE== null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                                    CleanUpDatabase.class, "cleanup_database.db")
+                                                    TodocDatabase.class, "todoc_database.db")
                                                     .addCallback(prepopulateDatabase())
                                                     .build();
                 }
@@ -57,7 +49,7 @@ public abstract class CleanUpDatabase extends RoomDatabase {
 
                 Project[] projects = Project.getAllProjects();
                 for (Project project : projects) {
-                    ContentValues contentValues = new ContentValues();  //  Populate
+                    ContentValues contentValues = new ContentValues();
                     contentValues.put("name", project.getName());
                     contentValues.put("color", project.getColor());
 
