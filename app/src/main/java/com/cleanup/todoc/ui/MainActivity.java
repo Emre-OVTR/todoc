@@ -1,6 +1,8 @@
 package com.cleanup.todoc.ui;
 
 import android.app.AlertDialog;
+
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -118,8 +120,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     private void configureViewModel(){
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        mMainActivityViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
-        // mMainActivityViewModel = ViewModelProvider.get(MainActivityViewModel.class);
+        mMainActivityViewModel = new ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel.class);
         mMainActivityViewModel.init();
     }
 
@@ -287,13 +288,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         dialog.setOnShowListener(dialogInterface -> {
 
             Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    onPositiveButtonClick(dialog);
-                }
-            });
+            button.setOnClickListener(view -> onPositiveButtonClick(dialog));
         });
 
         return dialog;
