@@ -77,22 +77,4 @@ public class TaskDaoTest {
         List<Task> tasks = LiveDataTestUtils.getValue(this.mDatabase.taskDao().getAllTasks());
         assertFalse(tasks.contains(NEW_TASK));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

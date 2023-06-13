@@ -34,66 +34,40 @@ import java.util.List;
 
 
 
-/**
- * <p>Home activity of the application which is displayed when the user opens the app.</p>
- * <p>Displays the list of tasks.</p>
- *
- * @author Gaëtan HERFRAY
- */
+
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
-    /**
-     * List of all projects available in the application
-     */
+
     private List<Project> allProjects;
 
-    /**
-     * List of all current tasks of the application
-     */
+
     @NonNull
     private final ArrayList<Task> tasks = new ArrayList<>();
 
-    /**
-     * The adapter which handles the list of tasks
-     */
+
     private final TasksAdapter adapter = new TasksAdapter(tasks, this);
 
-    /**
-     * The sort method to be used to display tasks
-     */
+
     @NonNull
     private SortMethod sortMethod = SortMethod.NONE;
 
-    /**
-     * Dialog to create a new task
-     */
+
     @Nullable
     public AlertDialog dialog = null;
 
-    /**
-     * EditText that allows user to set the name of a task
-     */
+
     @Nullable
     private EditText dialogEditText = null;
 
-    /**
-     * Spinner that allows the user to associate a project to a task
-     */
+
     @Nullable
     private Spinner dialogSpinner = null;
 
-    /**
-     * The RecyclerView which displays the list of tasks
-     */
 
-    @SuppressWarnings("NullableProblems")
+
     @NonNull
     private RecyclerView listTasks;
 
-    /**
-     * The TextView displaying the empty state
-     */
 
-    @SuppressWarnings("NullableProblems")
     @NonNull
     private TextView lblNoTasks;
 
@@ -166,11 +140,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         adapter.updateTasks(tasks);
     }
 
-    /**
-     * Called when the user clicks on the positive button of the Create Task Dialog.
-     *
-     * @param dialogInterface the current displayed dialog
-     */
+
     private void onPositiveButtonClick(DialogInterface dialogInterface) {
 
         if (dialogEditText != null && dialogSpinner != null) {
@@ -211,9 +181,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         }
     }
 
-    /**
-     * Shows the Dialog for adding a Task
-     */
+
     private void showAddTaskDialog() {
         final AlertDialog dialog = getAddTaskDialog();
 
@@ -225,19 +193,13 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         populateDialogSpinner();
     }
 
-    /**
-     * Adds the given task to the list of created tasks.
-     *
-     * @param task the task to be added to the list
-     */
+
     private void addTask(@NonNull Task task) {
         mMainActivityViewModel.addTask(task);
         adapter.updateTasks(tasks);
     }
 
-    /**
-     * Updates the list of tasks in the UI
-     */
+
     private void updateTasks(List<Task> tasks) {
         if (tasks.size() == 0) {
             lblNoTasks.setVisibility(View.VISIBLE);
@@ -264,11 +226,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         }
     }
 
-    /**
-     * Returns the dialog allowing the user to create a new task.
-     *
-     * @return the dialog allowing the user to create a new task
-     */
+
     @NonNull
     private AlertDialog getAddTaskDialog() {
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
@@ -294,9 +252,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         return dialog;
     }
 
-    /**
-     * Sets the data of the Spinner with projects to associate to a new task
-     */
     private void populateDialogSpinner() {
         final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -305,29 +260,16 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         }
     }
 
-    /**
-     * List of all possible sort methods for task
-     */
+
     private enum SortMethod {
-        /**
-         * Sort alphabetical by name
-         */
+
         ALPHABETICAL,
-        /**
-         * Inverted sort alphabetical by name
-         */
         ALPHABETICAL_INVERTED,
-        /**
-         * Lastly created first
-         */
+
         RECENT_FIRST,
-        /**
-         * First created first
-         */
+
         OLD_FIRST,
-        /**
-         * No sort
-         */
+
         NONE
     }
 }

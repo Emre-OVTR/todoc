@@ -1,17 +1,17 @@
 package com.cleanup.todoc;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.room.Room;
+import static org.junit.Assert.assertEquals;
+
 import android.content.Context;
 import android.graphics.Color;
-import androidx.test.platform.app.InstrumentationRegistry;
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.cleanup.todoc.database.dao.TodocDatabase;
 import com.cleanup.todoc.model.Project;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
