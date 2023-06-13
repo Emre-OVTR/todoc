@@ -7,9 +7,9 @@ import android.graphics.Color;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.cleanup.todoc.database.dao.TodocDatabase;
-import com.cleanup.todoc.database.dao.ProjectDao;
-import com.cleanup.todoc.database.dao.TaskDao;
+import com.cleanup.todoc.database.TodocDatabase;
+import com.cleanup.todoc.database.ProjectDao;
+import com.cleanup.todoc.database.TaskDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 

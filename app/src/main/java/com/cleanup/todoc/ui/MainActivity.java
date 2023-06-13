@@ -3,7 +3,7 @@ package com.cleanup.todoc.ui;
 import android.app.AlertDialog;
 
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -21,11 +21,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
-import com.cleanup.todoc.injections.Injection;
-import com.cleanup.todoc.injections.ViewModelFactory;
+import com.cleanup.todoc.di.Injection;
+import com.cleanup.todoc.di.ViewModelFactory;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
-import com.cleanup.todoc.tasklist.MainActivityViewModel;
+import com.cleanup.todoc.view.MainActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,7 @@ import java.util.List;
 
 
 
-public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+public class MainActivity extends AppCompatActivity implements TasksRecyclerViewAdapter.DeleteTaskListener {
 
     private List<Project> allProjects;
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     private final ArrayList<Task> tasks = new ArrayList<>();
 
 
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private final TasksRecyclerViewAdapter adapter = new TasksRecyclerViewAdapter(tasks, this);
 
 
     @NonNull
