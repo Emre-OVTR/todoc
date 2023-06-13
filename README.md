@@ -1,6 +1,6 @@
 # MàJ et Maintenance 
 
-Objectif : sauvegarde de la liste des tâches facilitée et structurée. (Persistence des données)
+Objectif : sauvegarde de la liste des tâches facilitée et structurée. (Persistance des données)
 Objectif : mettre en avant les différentes classes utilisées dans l’application et les
 relations entre elles.
 Objectif : mieux visualiser le comportement fonctionnel de l’application.
